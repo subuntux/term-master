@@ -614,55 +614,7 @@ login() {
     pd sh $distro
 }
 
-tli_wrapper() {
-    DEINE_WEBSITE_URL="https://term-master.netlify.app/pkg/"
 
-    COMMAND=$1
-    PACKAGE_NAME=$2
-
-    # Vollständige URL der ZIP-Datei
-    ZIP_URL="${DEINE_WEBSITE_URL}/${PACKAGE_NAME}.zip"
-
-    # Funktion, um die ZIP-Datei herunterzuladen
-    download_zip() {
-        echo "Versuche, ZIP-Datei herunterzuladen..."
-        wget -q --spider $ZIP_URL
-
-        if [ $? -eq 0 ]; then
-            echo "ZIP-Datei gefunden. Herunterladen..."
-            wget $ZIP_URL -O "${PACKAGE_NAME}.zip"
-            echo "Entpacke ZIP-Datei..."
-            mkdir ${PACKAGE_NAME}
-            unzip "${PACKAGE_NAME}.zip" -d "${PACKAGE_NAME}"
-
-            # Prüfen, ob die JSON-Datei existiert
-            if [ -f "${PACKAGE_NAME}/${PACKAGE_NAME}.json" ]; then
-                echo "Erstelle Debian-Paket aus JSON..."
-                pkg install termux-create-package -y
-                termux-create-package "${PACKAGE_NAME}/${PACKAGE_NAME}.json" -o "${PACKAGE_NAME}*.deb"
-
-                echo "Installiere Debian-Paket..."
-                dpkg -i "${PACKAGE_NAME}/${PACKAGE_NAME}*.deb"
-            else
-                echo "JSON-Datei für das Paket wurde nicht gefunden."
-            fi
-        else
-            echo "Keine ZIP-Datei gefunden. Führe pkg aus..."
-            pkg $COMMAND $PACKAGE_NAME
-        fi
-    }
-
-    # Hauptlogik des Skripts
-    case $COMMAND in
-        install)
-            download_zip
-            ;;
-        *)
-            echo "Führe pkg mit originalen Parametern aus..."
-            pkg "$@"
-            ;;
-    esac
-}
 
 help() {
     echo "Instruction"
@@ -686,6 +638,43 @@ help() {
     echo "--api"
     echo "--update"
     echo "--login"
+}
+
+tli_wrapper() {
+    DEINE_WEBSITE_URL="https://term-master.netlify.app/pkg/"
+
+    COMMAND=$1
+    PACKAGE_NAME=$2
+
+    # Vollständige URL der DEB-Datei
+    DEB_URL="${DEINE_WEBSITE_URL}/${PACKAGE_NAME}.deb"
+
+    # Funktion, um die DEB-Datei herunterzuladen und zu installieren
+    download_and_install_deb() {
+        echo "Versuche, DEB-Datei herunterzuladen..."
+        wget -q --spider $DEB_URL
+
+        if [ $? -eq 0 ]; then
+            echo "DEB-Datei gefunden. Herunterladen..."
+            wget $DEB_URL -O "${PACKAGE_NAME}.deb"
+            echo "Installiere DEB-Datei..."
+            dpkg -i "${PACKAGE_NAME}.deb"
+        else
+            echo "Keine DEB-Datei gefunden. Führe pkg aus..."
+            pkg $COMMAND $PACKAGE_NAME
+        fi
+    }
+
+    # Hauptlogik des Skripts
+    case $COMMAND in
+        install)
+            download_and_install_deb
+            ;;
+        *)
+            echo "Führe pkg mit originalen Parametern aus..."
+            pkg "$@"
+            ;;
+    esac
 }
 
 direct_to_menu() {
