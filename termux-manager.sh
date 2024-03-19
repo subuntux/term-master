@@ -162,17 +162,24 @@ run_commands() {
 start_terminal() {
     while true; do 
         read -p "[klinux@localhost~$]¢ " cmd2
-        
-        if [ "$cmd2" = "tli" ]; then
-            read -p "Pakage?: " pkg
-            wget https://subuntux.github.io/$pkg/$pkg.deb
-            dpkg -i $pkg.deb 
-            mv $pkg.deb $HOME/.cache/tli/
+
+        # Splits the input into an array
+        read -ra cmd_parts <<< "$cmd2"
+
+        # Checks if the first part of the input is 'tli'
+        if [ "${cmd_parts[0]}" = "tli" ]; then
+            # Removes the first element ('tli') from the array
+            unset cmd_parts[0]
+            # Calls tli_wrapper with the remaining arguments
+            tli_wrapper "${cmd_parts[@]}"
         elif [ "$cmd2" = "setup" ]; then
-            mkdir $HOME/.cache/tli/
+            # Creates the directory, ensuring it exists
+            mkdir -p $HOME/.cache/tli/
         elif [ "$cmd2" = "cache" ]; then 
+            # Lists contents of the cache directory
             ls $HOME/.cache/tli/
         else
+            # Executes any other command
             eval "$cmd2"
         fi 
     done
@@ -605,6 +612,51 @@ update_term() {
 login() {
     read -p "Distro: " distro 
     pd sh $distro
+}
+
+tli_wrapper() {
+    DEINE_WEBSITE_URL="https://term-master.netlify.app/pkg/"
+
+COMMAND=$1
+PACKAGE_NAME=$2
+
+# Vollständige URL der ZIP-Datei
+ZIP_URL="${DEINE_WEBSITE_URL}/${PACKAGE_NAME}.zip"
+
+# Funktion, um die ZIP-Datei herunterzuladen
+download_zip() {
+    echo "Download..."
+    wget -q --spider $ZIP_URL
+
+    if [ $? -eq 0 ]; then
+        echo "Download ZIP"
+        wget $ZIP_URL
+        mv $PACKAGE_NAME.zip .cache/tli
+        pkg install zip -y
+        cd .cache/tli
+        mkdir $PACKAGE_NAME
+        mv $PACKAGE_NAME.zip $PACKAGE_NAME/
+        unzip $PACKAGE_NAME.zip 
+        pkg install termux-create-package -y
+        termux-create-package *.json
+        dpkg -i *.deb 
+        cd $HOME
+    else
+        echo "Keine ZIP-Datei gefunden. Führe pkg aus..."
+        pkg $COMMAND $PACKAGE_NAME
+    fi
+}
+
+# Hauptlogik des Skripts
+case $COMMAND in
+    install)
+        download_zip
+        ;;
+    *)
+        echo "Führe pkg mit originalen Parametern aus..."
+        pkg "$@"
+        ;;
+esac
 }
 
 help() {
