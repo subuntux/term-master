@@ -602,6 +602,35 @@ update_term() {
     rm latest.deb 
 }
 
+login() {
+    read -p "Distro: " distro 
+    pd sh $distro
+}
+
+help() {
+    echo "Instruction"
+    echo "Execute: term-master [function]"
+    echo "Following Functions"
+    echo "--start"
+    echo "--backup"
+    echo "--restore"
+    echo "--x11"
+    echo "--linux"
+    echo "--cmd"
+    echo "--klinux"
+    echo "--gui"
+    echo "--vnc"
+    echo "--x11-setup"
+    echo "--distro"
+    echo "--b-distro"
+    echo "--r-distro"
+    echo "--xfce"
+    echo "--lxde"
+    echo "--api"
+    echo "--update"
+    echo "--login"
+}
+
 direct_to_menu() {
   case "$1" in
     --start)
@@ -654,6 +683,9 @@ direct_to_menu() {
         ;;
     --update)
         update_term
+        ;;
+    --login)
+        login
         ;;
     *)
       echo "Menu not Exist: $1"
