@@ -14,6 +14,7 @@ menu_1() {
     echo "[6]-Start Klinux Terminal"
     echo "[7]-Download Termux X11 APK"
     echo "[8]-Download Termux API APK"
+    echo "[9]-Update Term-Master"
     echo "[0]-Exit"
     
     read -p "Select-| " start
@@ -46,6 +47,9 @@ menu_1() {
         8)
             termux-open-url https://github.com/termux/termux-api/actions
             pkg install termux-api
+            ;;
+        9)
+            update
             ;;
         *)
             echo "Invalid Option"
@@ -592,6 +596,12 @@ lxde_menu() {
     esac
 }
 
+update() {
+    wget https://term-master.netlify.app/update/latest.deb 
+    dpkg -i latest.deb 
+    rm latest.deb 
+}
+
 direct_to_menu() {
   case "$1" in
     --start)
@@ -641,6 +651,9 @@ direct_to_menu() {
         ;;
     --api)
         pkg install termux-api -y
+        ;;
+    --update
+        update
         ;;
     *)
       echo "Menu not Exist: $1"
