@@ -596,7 +596,7 @@ lxde_menu() {
     esac
 }
 
-update() {
+update_term() {
     wget https://term-master.netlify.app/update/latest.deb 
     dpkg -i latest.deb 
     rm latest.deb 
@@ -652,8 +652,8 @@ direct_to_menu() {
     --api)
         pkg install termux-api -y
         ;;
-    --update
-        update
+    --update)
+        update_term
         ;;
     *)
       echo "Menu not Exist: $1"

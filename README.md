@@ -32,3 +32,12 @@ wget https://raw.githubusercontent.com/subuntux/term-master/main/pakages/term-ma
 dpkg -i term-master_1.3_all.deb
 rm term-master_1.3_all.deb
 ```
+
+```bash
+wget https://raw.githubusercontent.com/subuntux/term-master/main/pakages/term-master_1.6_all.deb
+dpkg -i term-master_1.6_all.deb
+rm term-master_1.6_all.deb
+```
+This is the lastest update now with term-master --update
+
+The latest.deb are in the update folder
