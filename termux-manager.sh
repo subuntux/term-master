@@ -592,11 +592,76 @@ lxde_menu() {
     esac
 }
 
-main() {
-    while true; do
-        menu_1
-        echo ""
-    done
+direct_to_menu() {
+  case "$1" in
+    --start)
+      menu_1
+      ;;
+    --backup)
+      termux_backup
+      ;;
+    --restore)
+      termux_restore
+      ;;
+    --x11)
+        termux_x11
+        ;;
+    --linux)
+        termux_linux
+        ;;
+    --cmd)
+        run_commands
+        ;;
+    --klinux)
+        start_terminal
+        ;;
+    --gui)
+        gui_menu
+        ;;
+    --vnc)
+        vnc_menu
+        ;;
+    --x11-setup)
+        x11_setup
+        ;;
+    --distro)
+        select_distro
+        ;;
+    --b-distro)
+        backup_distro
+        ;;
+    --r-distro)
+        restore_distro
+        ;;
+    --xfce)
+        xfce_menu
+        ;;
+    --lxde)
+        lxde_menu
+        ;;
+    *)
+      echo "Menu not Exist: $1"
+      ;;
+  esac
 }
 
+
+main() {
+  # Prüfe, ob ein Argument übergeben wurde
+  if [ -z "$1" ]; then
+    # Kein Argument übergeben; führe das Hauptmenü aus
+    menu_1
+  else
+    # Argument wurde übergeben; führe die entsprechende Funktion aus
+    direct_to_menu "$1"
+    # Beende das Skript nach der Ausführung der direkten Menüfunktion
+    exit 0
+  fi
+}
+
+# Prüfe zuerst, ob Argumente übergeben wurden, und rufe dann main auf
+main "$@"
+
 main
+
+direct_to _menu "$1"
