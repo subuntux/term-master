@@ -24,3 +24,11 @@ dpkg -i term-master_1.2_all.deb
 rm term-master_1.2_all.deb
 ```
 addet arguments
+
+Version 1.2
+
+```bash
+wget https://raw.githubusercontent.com/subuntux/term-master/main/pakages/term-master_1.3_all.deb
+dpkg -i term-master_1.3_all.deb
+rm term-master_1.3_all.deb
+```

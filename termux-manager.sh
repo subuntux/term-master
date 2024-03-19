@@ -3,7 +3,6 @@
 echo "[*] Warning"
 echo "[*] You need Termux X11 APK"
 echo "[*] And Termux X11 APK"
-pkg install termux-api
 menu_1() {
     echo "[Term: Tool V.1.0]"
     echo "Select an Option"
@@ -46,6 +45,7 @@ menu_1() {
             ;;
         8)
             termux-open-url https://github.com/termux/termux-api/actions
+            pkg install termux-api
             ;;
         *)
             echo "Invalid Option"
@@ -639,6 +639,9 @@ direct_to_menu() {
     --lxde)
         lxde_menu
         ;;
+    --api)
+        pkg install termux-api -y
+        ;;
     *)
       echo "Menu not Exist: $1"
       ;;
@@ -647,19 +650,13 @@ direct_to_menu() {
 
 
 main() {
-  # Prüfe, ob ein Argument übergeben wurde
   if [ -z "$1" ]; then
-    # Kein Argument übergeben; führe das Hauptmenü aus
     menu_1
   else
-    # Argument wurde übergeben; führe die entsprechende Funktion aus
     direct_to_menu "$1"
-    # Beende das Skript nach der Ausführung der direkten Menüfunktion
     exit 0
   fi
 }
-
-# Prüfe zuerst, ob Argumente übergeben wurden, und rufe dann main auf
 main "$@"
 
 main
