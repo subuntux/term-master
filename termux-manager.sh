@@ -49,7 +49,7 @@ menu_1() {
             pkg install termux-api
             ;;
         9)
-            update
+            update_term
             ;;
         *)
             echo "Invalid Option"

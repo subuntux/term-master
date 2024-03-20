@@ -1,6 +1,6 @@
 {
   "name": "term-master",
-  "version": "1.8",
+  "version": "1.9",
   "arch": "all",
   "maintainer": "Subuntu X <subuntux@github.com>",
   "description": "Termux Menu",
